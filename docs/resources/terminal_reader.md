@@ -29,10 +29,21 @@ description: |-
 - `action_failure_code` (String) Failure code, only set if status is `failed`.
 - `action_failure_message` (String) Detailed failure message, only set if status is `failed`.
 - `action_process_payment_intent_payment_intent` (String) Most recent PaymentIntent processed by the reader.
+- `action_process_payment_intent_process_config_enable_customer_cancellation` (Boolean) Enable customer initiated cancellation when processing this payment.
 - `action_process_payment_intent_process_config_skip_tipping` (Boolean) Override showing a tipping selection screen on this transaction.
 - `action_process_payment_intent_process_config_tipping_amount_eligible` (Number) Amount used to calculate tip suggestions on tipping selection screen for this transaction. Must be a positive integer in the smallest currency unit (e.g., 100 cents to represent $1.00 or 100 to represent ¥100, a zero-decimal currency).
 - `action_process_setup_intent_generated_card` (String) ID of a card PaymentMethod generated from the card_present PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+- `action_process_setup_intent_process_config_enable_customer_cancellation` (Boolean) Enable customer initiated cancellation when processing this SetupIntent.
 - `action_process_setup_intent_setup_intent` (String) Most recent SetupIntent processed by the reader.
+- `action_refund_payment_amount` (Number) The amount being refunded.
+- `action_refund_payment_charge` (String) Charge that is being refunded.
+- `action_refund_payment_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+- `action_refund_payment_payment_intent` (String) Payment intent that is being refunded.
+- `action_refund_payment_reason` (String) The reason for the refund.
+- `action_refund_payment_refund` (String) Unique identifier for the refund object.
+- `action_refund_payment_refund_application_fee` (Boolean) Boolean indicating whether the application fee should be refunded when refunding this charge. If a full charge refund is given, the full application fee will be refunded. Otherwise, the application fee will be refunded in an amount proportional to the amount of the charge refunded. An application fee can be refunded only by the application that created the charge.
+- `action_refund_payment_refund_payment_config_enable_customer_cancellation` (Boolean) Enable customer initiated cancellation when refunding this payment.
+- `action_refund_payment_reverse_transfer` (Boolean) Boolean indicating whether the transfer should be reversed when refunding this charge. The transfer will be reversed proportionally to the amount being refunded (either the entire or partial amount). A transfer can be reversed only by the application that created the charge.
 - `action_set_reader_display_cart_currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
 - `action_set_reader_display_cart_line_items` (List of Object) List of line items in the cart. (see [below for nested schema](#nestedatt--action_set_reader_display_cart_line_items))
 - `action_set_reader_display_cart_tax` (Number) Tax amount for the entire cart. A positive integer in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
@@ -41,13 +52,13 @@ description: |-
 - `action_status` (String) Status of the action performed by the reader.
 - `action_type` (String) Type of action performed by the reader.
 - `device_sw_version` (String) The current software version of the reader.
-- `device_type` (String) Type of reader, one of `bbpos_wisepad3`, `stripe_m2`, `bbpos_chipper2x`, `bbpos_wisepos_e`, `verifone_P400`, or `simulated_wisepos_e`.
+- `device_type` (String) Type of reader, one of `bbpos_wisepad3`, `stripe_m2`, `stripe_s700`, `bbpos_chipper2x`, `bbpos_wisepos_e`, `verifone_P400`, `simulated_wisepos_e`, or `mobile_phone_reader`.
 - `id` (String) Unique identifier for the object.
 - `ip_address` (String) The local IP address of the reader.
 - `livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
 - `serial_number` (String) Serial number of the reader.
-- `status` (String) The networking status of the reader.
+- `status` (String) The networking status of the reader. We do not recommend using this field in flows that may block taking payments.
 
 <a id="nestedatt--action_set_reader_display_cart_line_items"></a>
 ### Nested Schema for `action_set_reader_display_cart_line_items`

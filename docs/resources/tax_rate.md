@@ -32,7 +32,11 @@ description: |-
 ### Read-Only
 
 - `created` (Number) Time at which the object was created. Measured in seconds since the Unix epoch.
+- `effective_percentage` (Number) Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,
+this percentage reflects the rate actually used to calculate tax based on the product's taxability
+and whether the user is registered to collect taxes in the corresponding jurisdiction.
 - `id` (String) Unique identifier for the object.
+- `jurisdiction_level` (String) The level of the jurisdiction that imposes this tax rate. Will be `null` for manually defined tax rates.
 - `livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
 

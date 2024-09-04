@@ -30,11 +30,10 @@ description: |-
 - `features_subscription_cancel_enabled` (Boolean) Whether the feature is enabled.
 - `features_subscription_cancel_mode` (String) Whether to cancel subscriptions immediately or at the end of the billing period.
 - `features_subscription_cancel_proration_behavior` (String) Whether to create prorations when canceling subscriptions. Possible values are `none` and `create_prorations`.
-- `features_subscription_pause_enabled` (Boolean) Whether the feature is enabled.
 - `features_subscription_update_default_allowed_updates` (List of String) The types of subscription updates that are supported for items listed in the `products` attribute. When empty, subscriptions are not updateable.
 - `features_subscription_update_enabled` (Boolean) Whether the feature is enabled.
-- `features_subscription_update_products` (Block List) The list of products that support subscription updates. (see [below for nested schema](#nestedblock--features_subscription_update_products))
-- `features_subscription_update_proration_behavior` (String) Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `create_prorations`, and `always_invoice`.
+- `features_subscription_update_products` (Block List) The list of up to 10 products that support subscription updates. (see [below for nested schema](#nestedblock--features_subscription_update_products))
+- `features_subscription_update_proration_behavior` (String) Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `create_prorations`, and `always_invoice`. Defaults to a value of `none` if you don't set it during creation.
 - `login_page_enabled` (Boolean) If `true`, a shareable `url` will be generated that will take your customers to a hosted login page for the customer portal.
 
 If `false`, the previously generated `url`, if any, will be deactivated.

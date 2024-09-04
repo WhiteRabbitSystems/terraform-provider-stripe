@@ -1,4 +1,4 @@
-#!/usr/bin/bash -xeu
+#!/usr/bin/env bash -xeu
 rm -rf generated/resources*
 go run ./generator
 cd generated

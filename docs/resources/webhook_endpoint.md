@@ -33,7 +33,7 @@ description: |-
 - `id` (String) Unique identifier for the object.
 - `livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
-- `secret` (String) The endpoint's secret, used to generate [webhook signatures](https://stripe.com/docs/webhooks/signatures). Only returned at creation.
+- `secret` (String) The endpoint's secret, used to generate [webhook signatures](https://docs.stripe.com/webhooks/signatures). Only returned at creation.
 - `status` (String) The status of the webhook. It can be `enabled` or `disabled`.
 
 

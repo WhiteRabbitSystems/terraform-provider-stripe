@@ -30,7 +30,7 @@ description: |-
 - `fixed_amount_currency_options` (Block List) Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies). (see [below for nested schema](#nestedblock--fixed_amount_currency_options))
 - `tax_behavior` (String) Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
 - `tax_code` (String) A [tax code](https://stripe.com/docs/tax/tax-categories) ID. The Shipping tax code is `txcd_92010001`.
-- `type` (String) The type of calculation to use on the shipping rate. Can only be `fixed_amount` for now.
+- `type` (String) The type of calculation to use on the shipping rate.
 
 ### Read-Only
 

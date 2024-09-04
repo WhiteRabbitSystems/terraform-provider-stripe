@@ -26,39 +26,69 @@ description: |-
 - `after_completion_type` (String) The specified behavior after the purchase is complete.
 - `allow_promotion_codes` (Boolean) Enables user redeemable promotion codes.
 - `application_fee_amount` (Number) The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account. Can only be applied when there are no line items with recurring prices.
-- `application_fee_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account. There must be at least 1 line item with a recurring price to use this field.
+- `application_fee_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account. There must be at least 1 line item with a recurring price to use this field.
 - `automatic_tax_enabled` (Boolean) If `true`, tax will be calculated automatically using the customer's location.
-- `billing_address_collection` (String) Configuration for collecting the customer's billing address.
+- `automatic_tax_liability_account` (String) The connected account being referenced when `type` is `account`.
+- `automatic_tax_liability_type` (String) Type of the account referenced.
+- `billing_address_collection` (String) Configuration for collecting the customer's billing address. Defaults to `auto`.
+- `consent_collection_payment_method_reuse_agreement_position` (String) Determines the position and visibility of the payment method reuse agreement in the UI. When set to `auto`, Stripe's defaults will be used.
+
+When set to `hidden`, the payment method reuse agreement text will always be hidden in the UI.
 - `consent_collection_promotions` (String) If set to `auto`, enables the collection of customer consent for promotional communications.
 - `consent_collection_terms_of_service` (String) If set to `required`, it requires cutomers to accept the terms of service before being able to pay. If set to `none`, customers won't be shown a checkbox to accept the terms of service.
 - `currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies) and supported by each line item's price.
-- `custom_text_shipping_address_message` (String) Text may be up to 500 characters in length.
-- `custom_text_submit_message` (String) Text may be up to 500 characters in length.
+- `custom_fields` (Block List) Collect additional information from your customer using custom fields. Up to 3 fields are supported. (see [below for nested schema](#nestedblock--custom_fields))
+- `custom_text_after_submit_message` (String) Text may be up to 1200 characters in length.
+- `custom_text_shipping_address_message` (String) Text may be up to 1200 characters in length.
+- `custom_text_submit_message` (String) Text may be up to 1200 characters in length.
+- `custom_text_terms_of_service_acceptance_message` (String) Text may be up to 1200 characters in length.
 - `customer_creation` (String) Configures whether [checkout sessions](https://stripe.com/docs/api/checkout/sessions) created by this payment link create a [Customer](https://stripe.com/docs/api/customers).
+- `inactive_message` (String) The custom message to be displayed to a customer when a payment link is no longer active.
+- `invoice_creation_enabled` (Boolean) Enable creating an invoice on successful payment.
+- `invoice_creation_invoice_data_account_tax_ids` (List of String) The account tax IDs associated with the invoice.
+- `invoice_creation_invoice_data_custom_fields` (Block List) A list of up to 4 custom fields to be displayed on the invoice. (see [below for nested schema](#nestedblock--invoice_creation_invoice_data_custom_fields))
+- `invoice_creation_invoice_data_description` (String) An arbitrary string attached to the object. Often useful for displaying to users.
+- `invoice_creation_invoice_data_footer` (String) Footer to be displayed on the invoice.
+- `invoice_creation_invoice_data_issuer_account` (String) The connected account being referenced when `type` is `account`.
+- `invoice_creation_invoice_data_issuer_type` (String) Type of the account referenced.
+- `invoice_creation_invoice_data_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+- `invoice_creation_invoice_data_rendering_options_amount_tax_display` (String) How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
 - `on_behalf_of` (String) The account on behalf of which to charge.
 - `payment_intent_data_capture_method` (String) Indicates when the funds will be captured from the customer's account.
+- `payment_intent_data_description` (String) An arbitrary string attached to the object. Often useful for displaying to users.
+- `payment_intent_data_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will set metadata on [Payment Intents](https://stripe.com/docs/api/payment_intents) generated from this payment link.
 - `payment_intent_data_setup_future_usage` (String) Indicates that you intend to make future payments with the payment method collected during checkout.
+- `payment_intent_data_statement_descriptor` (String) For a non-card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge.
+- `payment_intent_data_statement_descriptor_suffix` (String) For a card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge. Concatenated with the account's statement descriptor prefix to form the complete statement descriptor.
+- `payment_intent_data_transfer_group` (String) A string that identifies the resulting payment as part of a group. See the PaymentIntents [use case for connected accounts](https://stripe.com/docs/connect/separate-charges-and-transfers) for details.
 - `payment_method_collection` (String) Specify whether Checkout should collect a payment method. When set to `if_required`, Checkout will not collect a payment method when the total due for the session is 0.This may occur if the Checkout Session includes a free trial or a discount.
 
-Can only be set in `subscription` mode.
+Can only be set in `subscription` mode. Defaults to `always`.
 
 If you'd like information on how to collect a payment method outside of Checkout, read the guide on [configuring subscriptions with a free trial](https://stripe.com/docs/payments/checkout/free-trials).
 - `payment_method_types` (List of String) The list of payment method types that customers can use. If no value is passed, Stripe will dynamically show relevant payment methods from your [payment method settings](https://dashboard.stripe.com/settings/payment_methods) (20+ payment methods [supported](https://stripe.com/docs/payments/payment-methods/integration-options#payment-method-product-support)).
 - `phone_number_collection_enabled` (Boolean) If `true`, a phone number will be collected during checkout.
+- `restrictions_completed_sessions_limit` (Number) The maximum number of checkout sessions that can be completed for the `completed_sessions` restriction to be met.
 - `shipping_address_collection_allowed_countries` (List of String) An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
 - `shipping_options` (Block List) The shipping rate options to apply to [checkout sessions](https://stripe.com/docs/api/checkout/sessions) created by this payment link. (see [below for nested schema](#nestedblock--shipping_options))
 - `submit_type` (String) Describes the type of transaction being performed in order to customize relevant text on the page, such as the submit button. Changing this value will also affect the hostname in the [url](https://stripe.com/docs/api/payment_links/payment_links/object#url) property (example: `donate.stripe.com`).
-- `subscription_data_description` (String) The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+- `subscription_data_description` (String) The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+- `subscription_data_invoice_settings_issuer_account` (String) The connected account being referenced when `type` is `account`.
+- `subscription_data_invoice_settings_issuer_type` (String) Type of the account referenced.
+- `subscription_data_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that will set metadata on [Subscriptions](https://stripe.com/docs/api/subscriptions) generated from this payment link.
 - `subscription_data_trial_period_days` (Number) Integer representing the number of trial period days before the customer is charged for the first time.
+- `subscription_data_trial_settings_end_behavior_missing_payment_method` (String) Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
 - `tax_id_collection_enabled` (Boolean) Indicates whether tax ID collection is enabled for the session.
-- `transfer_data_amount` (Number) The amount in %s that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+- `transfer_data_amount` (Number) The amount in cents (or local equivalent) that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
 - `transfer_data_destination` (String) The connected account receiving the transfer.
 
 ### Read-Only
 
+- `application` (String) The ID of the Connect application that created the Payment Link.
 - `id` (String) Unique identifier for the object.
 - `livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
+- `restrictions_completed_sessions_count` (Number) The current number of checkout sessions that have been completed on the payment link which count towards the `completed_sessions` restriction to be met.
 - `url` (String) The public URL that can be shared with customers.
 
 <a id="nestedblock--line_items"></a>
@@ -74,6 +104,44 @@ Optional:
 - `adjustable_quantity_enabled` (Boolean)
 - `adjustable_quantity_maximum` (Number)
 - `adjustable_quantity_minimum` (Number)
+
+
+<a id="nestedblock--custom_fields"></a>
+### Nested Schema for `custom_fields`
+
+Required:
+
+- `key` (String) String of your choice that your integration can use to reconcile this field. Must be unique to this field, alphanumeric, and up to 200 characters.
+- `label_custom` (String) Custom text for the label, displayed to the customer. Up to 50 characters.
+- `label_type` (String) The type of the label.
+- `type` (String) The type of the field.
+
+Optional:
+
+- `dropdown_options` (Block List) The options available for the customer to select. Up to 200 options allowed. (see [below for nested schema](#nestedblock--custom_fields--dropdown_options))
+- `numeric_maximum_length` (Number) The maximum character length constraint for the customer's input.
+- `numeric_minimum_length` (Number) The minimum character length requirement for the customer's input.
+- `optional` (Boolean) Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
+- `text_maximum_length` (Number) The maximum character length constraint for the customer's input.
+- `text_minimum_length` (Number) The minimum character length requirement for the customer's input.
+
+<a id="nestedblock--custom_fields--dropdown_options"></a>
+### Nested Schema for `custom_fields.dropdown_options`
+
+Required:
+
+- `label` (String) The label for the option, displayed to the customer. Up to 100 characters.
+- `value` (String) The value for this option, not displayed to the customer, used by your integration to reconcile the option selected by the customer. Must be unique to this option, alphanumeric, and up to 100 characters.
+
+
+
+<a id="nestedblock--invoice_creation_invoice_data_custom_fields"></a>
+### Nested Schema for `invoice_creation_invoice_data_custom_fields`
+
+Required:
+
+- `name` (String) The name of the custom field.
+- `value` (String) The value of the custom field.
 
 
 <a id="nestedblock--shipping_options"></a>

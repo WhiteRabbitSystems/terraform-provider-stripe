@@ -37,17 +37,18 @@ description: |-
 - `product_data_statement_descriptor` (String)
 - `product_data_tax_code` (String)
 - `product_data_unit_label` (String)
-- `recurring_aggregate_usage` (String) Specifies a usage aggregation strategy for prices of `usage_type=metered`. Allowed values are `sum` for summing up all usage during a period, `last_during_period` for using the last usage record reported within a period, `last_ever` for using the last usage record ever (across period bounds) or `max` which uses the usage record with the maximum reported usage during a period. Defaults to `sum`.
+- `recurring_aggregate_usage` (String) Specifies a usage aggregation strategy for prices of `usage_type=metered`. Defaults to `sum`.
 - `recurring_interval` (String) The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
 - `recurring_interval_count` (Number) The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
+- `recurring_meter` (String) The meter tracking the usage of a metered price
 - `recurring_usage_type` (String) Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
-- `tax_behavior` (String) Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+- `tax_behavior` (String) Only required if a [default tax behavior](https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
 - `tiers` (Block List) Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`. (see [below for nested schema](#nestedblock--tiers))
 - `tiers_mode` (String) Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price, in `graduated` tiering pricing can successively change as the quantity grows.
 - `transfer_lookup_key` (Boolean) If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
 - `transform_quantity_divide_by` (Number) Divide usage by this number.
 - `transform_quantity_round` (String) After division, either round the result `up` or `down`.
-- `unit_amount` (Number) A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unit_amount` or `custom_unit_amount` is required, unless `billing_scheme=tiered`.
+- `unit_amount` (Number) A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unit_amount`, `unit_amount_decimal`, or `custom_unit_amount` is required, unless `billing_scheme=tiered`.
 - `unit_amount_decimal` (String) Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
 
 ### Read-Only
@@ -71,10 +72,10 @@ Optional:
 - `custom_unit_amount_maximum` (Number) The maximum unit amount the customer can specify for this item.
 - `custom_unit_amount_minimum` (Number) The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
 - `custom_unit_amount_preset` (Number) The starting unit amount which can be updated by the customer.
-- `tax_behavior` (String) Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+- `tax_behavior` (String) Only required if a [default tax behavior](https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
 - `tiers` (Block List) Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`. (see [below for nested schema](#nestedblock--currency_options--tiers))
-- `unit_amount` (Number) The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
-- `unit_amount_decimal` (String) The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
+- `unit_amount` (Number) The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
+- `unit_amount_decimal` (String) The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
 
 <a id="nestedblock--currency_options--tiers"></a>
 ### Nested Schema for `currency_options.tiers`

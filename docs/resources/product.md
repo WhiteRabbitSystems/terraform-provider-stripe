@@ -30,6 +30,7 @@ description: |-
 - `default_price_data_unit_amount_decimal` (String)
 - `description` (String) The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
 - `images` (List of String) A list of up to 8 URLs of images for this product, meant to be displayable to the customer.
+- `marketing_features` (Block List) A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table). (see [below for nested schema](#nestedblock--marketing_features))
 - `package_dimensions_height` (Number) Height, in inches.
 - `package_dimensions_length` (Number) Length, in inches.
 - `package_dimensions_weight` (Number) Weight, in ounces.
@@ -38,9 +39,9 @@ description: |-
 - `statement_descriptor` (String) An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
 
 This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
- It must contain at least one letter.
+ It must contain at least one letter. Only used for subscription payments.
 - `tax_code` (String) A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
-- `unit_label` (String) A label that represents units of this product in Stripe and on customers’ receipts and invoices. When set, this will be included in associated invoice line item descriptions.
+- `unit_label` (String) A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
 - `url` (String) A URL of a publicly-accessible webpage for this product.
 
 ### Read-Only
@@ -83,5 +84,14 @@ Optional:
 - `flat_amount_decimal` (String)
 - `unit_amount` (Number)
 - `unit_amount_decimal` (String)
+
+
+
+<a id="nestedblock--marketing_features"></a>
+### Nested Schema for `marketing_features`
+
+Required:
+
+- `name` (String) The marketing feature name. Up to 80 characters long.
 
 

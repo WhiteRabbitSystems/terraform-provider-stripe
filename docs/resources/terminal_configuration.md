@@ -18,6 +18,11 @@ description: |-
 ### Optional
 
 - `bbpos_wisepos_e_splashscreen` (String) A File ID representing an image you would like displayed on the reader.
+- `name` (String) Name of the configuration
+- `offline_enabled` (Boolean) Determines whether to allow transactions to be collected while reader is offline. Defaults to false.
+- `reboot_window_end_hour` (Number) Integer between 0 to 23 that represents the end hour of the reboot time window. The value must be different than the start_hour.
+- `reboot_window_start_hour` (Number) Integer between 0 to 23 that represents the start hour of the reboot time window.
+- `stripe_s700_splashscreen` (String) A File ID representing an image you would like displayed on the reader.
 - `tipping_aud_fixed_amounts` (List of Number) Fixed amounts displayed when collecting a tip
 - `tipping_aud_percentages` (List of Number) Percentages displayed when collecting a tip
 - `tipping_aud_smart_tip_threshold` (Number) Below this amount, fixed amounts will be displayed; above it, percentages will be displayed

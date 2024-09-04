@@ -38,7 +38,7 @@ description: |-
 - `payment_method` (String)
 - `phone` (String) The customer's phone number.
 - `preferred_locales` (List of String) Customer's preferred languages, ordered by preference.
-- `promotion_code` (String) The API ID of a promotion code to apply to the customer. The customer will have a discount applied on all recurring payments. Charges you create through the API will not have the discount.
+- `promotion_code` (String) The ID of a promotion code to apply to the customer. The customer will have a discount applied on all recurring payments. Charges you create through the API will not have the discount.
 - `shipping_address_city` (String) City, district, suburb, town, or village.
 - `shipping_address_country` (String) Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
 - `shipping_address_line1` (String) Address line 1 (e.g., street, PO Box, or company name).
@@ -51,6 +51,7 @@ description: |-
 - `tax_exempt` (String) The customer's tax exemption. One of `none`, `exempt`, or `reverse`.
 - `tax_id_data` (Block List) The customer's tax IDs. (see [below for nested schema](#nestedblock--tax_id_data))
 - `tax_ip_address` (String) A recent IP address of the customer used for tax reporting and tax location inference.
+- `tax_validate_location` (String)
 - `test_clock` (String) ID of the test clock to attach to the customer.
 
 ### Read-Only
@@ -59,14 +60,17 @@ description: |-
 - `cash_balance_customer` (String) The ID of the customer whose cash balance this object represents.
 - `cash_balance_livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `cash_balance_object` (String) String representing the object's type. Objects of the same type share the same value.
+- `cash_balance_settings_using_merchant_default` (Boolean) A flag to indicate if reconciliation mode returned is the user's default or is specific to this customer cash balance
 - `created` (Number) Time at which the object was created. Measured in seconds since the Unix epoch.
 - `currency` (String) Three-letter [ISO code for the currency](https://stripe.com/docs/currencies) the customer can be charged in for recurring billing purposes.
 - `default_source` (String) ID of the default payment source for the customer.
 
-If you are using payment methods created via the PaymentMethods API, see the [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) field instead.
-- `delinquent` (Boolean) When the customer's latest invoice is billed by charging automatically, `delinquent` is `true` if the invoice's latest charge failed. When the customer's latest invoice is billed by sending an invoice, `delinquent` is `true` if the invoice isn't paid by its due date.
+If you use payment methods created through the PaymentMethods API, see the [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) field instead.
+- `delinquent` (Boolean) Tracks the most recent state change on any invoice belonging to the customer. Paying an invoice or marking it uncollectible via the API will set this field to false. An automatic payment failure or passing the `invoice.due_date` will set this field to `true`.
 
-If an invoice is marked uncollectible by [dunning](https://stripe.com/docs/billing/automatic-collection), `delinquent` doesn't get reset to `false`.
+If an invoice becomes uncollectible by [dunning](https://stripe.com/docs/billing/automatic-collection), `delinquent` doesn't reset to `false`.
+
+If you care whether the customer has paid their most recent subscription invoice, use `subscription.status` instead. Paying or marking uncollectible any customer invoice regardless of whether it is the latest invoice for a subscription will always set this field to `false`.
 - `discount_checkout_session` (String) The Checkout session that this coupon is applied to, if it is applied to a particular session in payment mode. Will not be present for subscription mode.
 - `discount_coupon_amount_off` (Number) Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
 - `discount_coupon_applies_to_products` (List of String) A list of product IDs this coupon applies to
@@ -81,7 +85,7 @@ If an invoice is marked uncollectible by [dunning](https://stripe.com/docs/billi
 - `discount_coupon_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
 - `discount_coupon_name` (String) Name of the coupon displayed to customers on for instance invoices or receipts.
 - `discount_coupon_object` (String) String representing the object's type. Objects of the same type share the same value.
-- `discount_coupon_percent_off` (Number) Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a %s100 invoice %s50 instead.
+- `discount_coupon_percent_off` (Number) Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
 - `discount_coupon_redeem_by` (Number) Date after which the coupon can no longer be redeemed.
 - `discount_coupon_times_redeemed` (Number) Number of times this coupon has been applied to a customer.
 - `discount_coupon_valid` (Boolean) Taking account of the above properties, whether this coupon can still be applied to a customer.
@@ -94,8 +98,9 @@ If an invoice is marked uncollectible by [dunning](https://stripe.com/docs/billi
 - `discount_promotion_code` (String) The promotion code applied to create this discount.
 - `discount_start` (Number) Date that the coupon was applied.
 - `discount_subscription` (String) The subscription that this coupon is applied to, if it is applied to a particular subscription.
+- `discount_subscription_item` (String) The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
 - `id` (String) Unique identifier for the object.
-- `invoice_credit_balance` (Map of Number) The current multi-currency balances, if any, being stored on the customer. If positive in a currency, the customer has a credit to apply to their next invoice denominated in that currency. If negative, the customer has an amount owed that will be added to their next invoice denominated in that currency. These balances do not refer to any unpaid invoices. They solely track amounts that have yet to be successfully applied to any invoice. A balance in a particular currency is only applied to any invoice as an invoice in that currency is finalized.
+- `invoice_credit_balance` (Map of Number) The current multi-currency balances, if any, that's stored on the customer. If positive in a currency, the customer has a credit to apply to their next invoice denominated in that currency. If negative, the customer has an amount owed that's added to their next invoice denominated in that currency. These balances don't apply to unpaid invoices. They solely track amounts that Stripe hasn't successfully applied to any invoice. Stripe only applies a balance in a specific currency to an invoice after that invoice (which is in the same currency) finalizes.
 - `livemode` (Boolean) Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
 - `shipping_carrier` (String) The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
@@ -151,12 +156,22 @@ Read-Only:
 - `application` (String)
 - `application_fee_percent` (Number)
 - `automatic_tax_enabled` (Boolean)
+- `automatic_tax_liability_account` (String)
+- `automatic_tax_liability_type` (String)
 - `billing_cycle_anchor` (Number)
+- `billing_cycle_anchor_config_day_of_month` (Number)
+- `billing_cycle_anchor_config_hour` (Number)
+- `billing_cycle_anchor_config_minute` (Number)
+- `billing_cycle_anchor_config_month` (Number)
+- `billing_cycle_anchor_config_second` (Number)
 - `billing_thresholds_amount_gte` (Number)
 - `billing_thresholds_reset_billing_cycle_anchor` (Boolean)
 - `cancel_at` (Number)
 - `cancel_at_period_end` (Boolean)
 - `canceled_at` (Number)
+- `cancellation_details_comment` (String)
+- `cancellation_details_feedback` (String)
+- `cancellation_details_reason` (String)
 - `collection_method` (String)
 - `created` (Number)
 - `currency` (String)
@@ -195,8 +210,13 @@ Read-Only:
 - `discount_promotion_code` (String)
 - `discount_start` (Number)
 - `discount_subscription` (String)
+- `discount_subscription_item` (String)
+- `discounts` (List of String)
 - `ended_at` (Number)
 - `id` (String)
+- `invoice_settings_account_tax_ids` (List of String)
+- `invoice_settings_issuer_account` (String)
+- `invoice_settings_issuer_type` (String)
 - `items_data` (List of Object) (see [below for nested schema](#nestedobjatt--subscriptions_data--items_data))
 - `items_has_more` (Boolean)
 - `items_object` (String)
@@ -220,7 +240,9 @@ Read-Only:
 - `payment_settings_payment_method_options_customer_balance_bank_transfer_eu_bank_transfer_country` (String)
 - `payment_settings_payment_method_options_customer_balance_bank_transfer_type` (String)
 - `payment_settings_payment_method_options_customer_balance_funding_type` (String)
+- `payment_settings_payment_method_options_us_bank_account_financial_connections_filters_account_subcategories` (List of String)
 - `payment_settings_payment_method_options_us_bank_account_financial_connections_permissions` (List of String)
+- `payment_settings_payment_method_options_us_bank_account_financial_connections_prefetch` (List of String)
 - `payment_settings_payment_method_options_us_bank_account_verification_method` (String)
 - `payment_settings_payment_method_types` (List of String)
 - `payment_settings_save_default_payment_method` (String)
@@ -239,6 +261,7 @@ Read-Only:
 - `transfer_data_amount_percent` (Number)
 - `transfer_data_destination` (String)
 - `trial_end` (Number)
+- `trial_settings_end_behavior_missing_payment_method` (String)
 - `trial_start` (Number)
 
 <a id="nestedobjatt--subscriptions_data--default_tax_rates"></a>
@@ -251,9 +274,11 @@ Read-Only:
 - `created` (Number)
 - `description` (String)
 - `display_name` (String)
+- `effective_percentage` (Number)
 - `id` (String)
 - `inclusive` (Boolean)
 - `jurisdiction` (String)
+- `jurisdiction_level` (String)
 - `livemode` (Boolean)
 - `metadata` (Map of String)
 - `object` (String)
@@ -278,6 +303,7 @@ Read-Only:
 
 - `billing_thresholds_usage_gte` (Number)
 - `created` (Number)
+- `discounts` (List of String)
 - `id` (String)
 - `metadata` (Map of String)
 - `object` (String)
@@ -299,6 +325,7 @@ Read-Only:
 - `price_recurring_aggregate_usage` (String)
 - `price_recurring_interval` (String)
 - `price_recurring_interval_count` (Number)
+- `price_recurring_meter` (String)
 - `price_recurring_usage_type` (String)
 - `price_tax_behavior` (String)
 - `price_tiers` (List of Object) (see [below for nested schema](#nestedobjatt--subscriptions_data--items_data--price_tiers))
@@ -361,9 +388,11 @@ Read-Only:
 - `created` (Number)
 - `description` (String)
 - `display_name` (String)
+- `effective_percentage` (Number)
 - `id` (String)
 - `inclusive` (Boolean)
 - `jurisdiction` (String)
+- `jurisdiction_level` (String)
 - `livemode` (Boolean)
 - `metadata` (Map of String)
 - `object` (String)
@@ -380,6 +409,7 @@ Read-Only:
 
 - `billing_thresholds_usage_gte` (Number)
 - `created` (Number)
+- `discounts` (List of String)
 - `id` (String)
 - `metadata` (Map of String)
 - `object` (String)
@@ -401,6 +431,7 @@ Read-Only:
 - `price_recurring_aggregate_usage` (String)
 - `price_recurring_interval` (String)
 - `price_recurring_interval_count` (Number)
+- `price_recurring_meter` (String)
 - `price_recurring_usage_type` (String)
 - `price_tax_behavior` (String)
 - `price_tiers` (List of Object) (see [below for nested schema](#nestedobjatt--subscriptions_data--pending_update_subscription_items--price_tiers))
@@ -463,9 +494,11 @@ Read-Only:
 - `created` (Number)
 - `description` (String)
 - `display_name` (String)
+- `effective_percentage` (Number)
 - `id` (String)
 - `inclusive` (Boolean)
 - `jurisdiction` (String)
+- `jurisdiction_level` (String)
 - `livemode` (Boolean)
 - `metadata` (Map of String)
 - `object` (String)
@@ -487,6 +520,10 @@ Read-Only:
 - `id` (String)
 - `livemode` (Boolean)
 - `object` (String)
+- `owner_account` (String)
+- `owner_application` (String)
+- `owner_customer` (String)
+- `owner_type` (String)
 - `type` (String)
 - `value` (String)
 - `verification_status` (String)

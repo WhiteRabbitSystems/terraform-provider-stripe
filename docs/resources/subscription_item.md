@@ -22,6 +22,7 @@ description: |-
 ### Optional
 
 - `billing_thresholds_usage_gte` (Number) Usage threshold that triggers the subscription to create an invoice
+- `discounts` (Block List) The coupons to redeem into discounts for the subscription item. (see [below for nested schema](#nestedblock--discounts))
 - `payment_behavior` (String) Use `allow_incomplete` to transition the subscription to `status=past_due` if a payment is required but cannot be paid. This allows you to manage scenarios where additional user actions are needed to pay a subscription's invoice. For example, SCA regulation may require 3DS authentication to complete payment. See the [SCA Migration Guide](https://stripe.com/docs/billing/migration/strong-customer-authentication) for Billing to learn more. This is the default behavior.
 
 Use `default_incomplete` to transition the subscription to `status=past_due` when payment is required and await explicit confirmation of the invoice's payment intent. This allows simpler management of scenarios where additional user actions are needed to pay a subscription’s invoice. Such as failed payments, [SCA regulation](https://stripe.com/docs/billing/migration/strong-customer-authentication), or collecting a mandate for a bank debit payment method.
@@ -37,7 +38,7 @@ Use `error_if_incomplete` if you want Stripe to return an HTTP 402 status code i
 - `price_data_tax_behavior` (String)
 - `price_data_unit_amount` (Number)
 - `price_data_unit_amount_decimal` (String)
-- `proration_behavior` (String) Determines how to handle [prorations](https://stripe.com/docs/subscriptions/billing-cycle#prorations) when the billing cycle changes (e.g., when switching plans, resetting `billing_cycle_anchor=now`, or starting a trial), or if an item's `quantity` changes.
+- `proration_behavior` (String) Determines how to handle [prorations](https://stripe.com/docs/billing/subscriptions/prorations) when the billing cycle changes (e.g., when switching plans, resetting `billing_cycle_anchor=now`, or starting a trial), or if an item's `quantity` changes. The default value is `create_prorations`.
 - `proration_date` (Number) If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://stripe.com/docs/api#retrieve_customer_invoice) endpoint.
 - `quantity` (Number) The quantity you'd like to apply to the subscription item you're creating.
 - `tax_rates` (List of String) A list of [Tax Rate](https://stripe.com/docs/api/tax_rates) ids. These Tax Rates will override the [`default_tax_rates`](https://stripe.com/docs/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
@@ -47,5 +48,27 @@ Use `error_if_incomplete` if you want Stripe to return an HTTP 402 status code i
 - `created` (Number) Time at which the object was created. Measured in seconds since the Unix epoch.
 - `id` (String) Unique identifier for the object.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
+
+<a id="nestedblock--discounts"></a>
+### Nested Schema for `discounts`
+
+Optional:
+
+- `coupon` (String)
+- `discount` (String)
+- `promotion_code` (String) The promotion code applied to create this discount.
+
+Read-Only:
+
+- `checkout_session` (String) The Checkout session that this coupon is applied to, if it is applied to a particular session in payment mode. Will not be present for subscription mode.
+- `customer` (String) The ID of the customer associated with this discount.
+- `end` (Number) If the coupon has a duration of `repeating`, the date that this discount will end. If the coupon has a duration of `once` or `forever`, this attribute will be null.
+- `id` (String) The ID of the discount object. Discounts cannot be fetched by ID. Use `expand[]=discounts` in API calls to expand discount IDs in an array.
+- `invoice` (String) The invoice that the discount's coupon was applied to, if it was applied directly to a particular invoice.
+- `invoice_item` (String) The invoice item `id` (or invoice line item `id` for invoice line items of type='subscription') that the discount's coupon was applied to, if it was applied directly to a particular invoice item or invoice line item.
+- `object` (String) String representing the object's type. Objects of the same type share the same value.
+- `start` (Number) Date that the coupon was applied.
+- `subscription` (String) The subscription that this coupon is applied to, if it is applied to a particular subscription.
+- `subscription_item` (String) The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
 
 

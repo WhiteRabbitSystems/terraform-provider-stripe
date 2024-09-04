@@ -19,7 +19,13 @@ description: |-
 
 - `account_token` (String) An [account token](https://stripe.com/docs/api#create_account_token), used to securely provide details to the account.
 - `bank_account` (String) Either a token, like the ones returned by [Stripe.js](https://stripe.com/docs/js), or a dictionary containing a user's bank account details.
-- `business_profile_mcc` (String) [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
+- `business_profile_annual_revenue_amount` (Number) A non-negative integer representing the amount in the [smallest currency unit](/currencies#zero-decimal).
+- `business_profile_annual_revenue_currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+- `business_profile_annual_revenue_fiscal_year_end` (String) The close-out date of the preceding fiscal year in ISO 8601 format. E.g. 2023-12-31 for the 31st of December, 2023.
+- `business_profile_estimated_worker_count` (Number) An estimated upper bound of employees, contractors, vendors, etc. currently working for the business.
+- `business_profile_mcc` (String) [The merchant category code for the account](/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
+- `business_profile_monthly_estimated_revenue_amount` (Number) A non-negative integer representing how much to charge in the [smallest currency unit](/currencies#zero-decimal).
+- `business_profile_monthly_estimated_revenue_currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
 - `business_profile_name` (String) The customer-facing business name.
 - `business_profile_product_description` (String) Internal-only description of the product sold or service provided by the business. It's used by Stripe for risk and underwriting purposes.
 - `business_profile_support_address_city` (String) City, district, suburb, town, or village.
@@ -32,10 +38,11 @@ description: |-
 - `business_profile_support_phone` (String) A publicly available phone number to call with support issues.
 - `business_profile_support_url` (String) A publicly available website for handling support issues.
 - `business_profile_url` (String) The business's publicly available website.
-- `business_type` (String) The business type.
+- `business_type` (String) The business type. Once you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property can only be updated for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
 - `capabilities_acss_debit_payments_requested` (Boolean)
 - `capabilities_affirm_payments_requested` (Boolean)
 - `capabilities_afterpay_clearpay_payments_requested` (Boolean)
+- `capabilities_amazon_pay_payments_requested` (Boolean)
 - `capabilities_au_becs_debit_payments_requested` (Boolean)
 - `capabilities_bacs_debit_payments_requested` (Boolean)
 - `capabilities_bancontact_payments_requested` (Boolean)
@@ -45,27 +52,40 @@ description: |-
 - `capabilities_card_issuing_requested` (Boolean)
 - `capabilities_card_payments_requested` (Boolean)
 - `capabilities_cartes_bancaires_payments_requested` (Boolean)
+- `capabilities_cashapp_payments_requested` (Boolean)
 - `capabilities_eps_payments_requested` (Boolean)
 - `capabilities_fpx_payments_requested` (Boolean)
+- `capabilities_gb_bank_transfer_payments_requested` (Boolean)
 - `capabilities_giropay_payments_requested` (Boolean)
 - `capabilities_grabpay_payments_requested` (Boolean)
 - `capabilities_ideal_payments_requested` (Boolean)
+- `capabilities_india_international_payments_requested` (Boolean)
 - `capabilities_jcb_payments_requested` (Boolean)
+- `capabilities_jp_bank_transfer_payments_requested` (Boolean)
 - `capabilities_klarna_payments_requested` (Boolean)
 - `capabilities_konbini_payments_requested` (Boolean)
 - `capabilities_legacy_payments_requested` (Boolean)
 - `capabilities_link_payments_requested` (Boolean)
+- `capabilities_mobilepay_payments_requested` (Boolean)
+- `capabilities_multibanco_payments_requested` (Boolean)
+- `capabilities_mx_bank_transfer_payments_requested` (Boolean)
 - `capabilities_oxxo_payments_requested` (Boolean)
 - `capabilities_p24_payments_requested` (Boolean)
 - `capabilities_paynow_payments_requested` (Boolean)
 - `capabilities_promptpay_payments_requested` (Boolean)
+- `capabilities_revolut_pay_payments_requested` (Boolean)
+- `capabilities_sepa_bank_transfer_payments_requested` (Boolean)
 - `capabilities_sepa_debit_payments_requested` (Boolean)
 - `capabilities_sofort_payments_requested` (Boolean)
+- `capabilities_swish_payments_requested` (Boolean)
 - `capabilities_tax_reporting_us_1099_k_requested` (Boolean)
 - `capabilities_tax_reporting_us_1099_misc_requested` (Boolean)
 - `capabilities_transfers_requested` (Boolean)
 - `capabilities_treasury_requested` (Boolean)
+- `capabilities_twint_payments_requested` (Boolean)
 - `capabilities_us_bank_account_ach_payments_requested` (Boolean)
+- `capabilities_us_bank_transfer_payments_requested` (Boolean)
+- `capabilities_zip_payments_requested` (Boolean)
 - `company_address_city` (String) City, district, suburb, town, or village.
 - `company_address_country` (String) Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
 - `company_address_kana_city` (String) City/Ward.
@@ -88,6 +108,8 @@ description: |-
 - `company_address_state` (String) State, county, province, or region.
 - `company_directors_provided` (Boolean) Whether the company's directors have been provided. This Boolean will be `true` if you've manually indicated that all directors are provided via [the `directors_provided` parameter](https://stripe.com/docs/api/accounts/update#update_account-company-directors_provided).
 - `company_executives_provided` (Boolean) Whether the company's executives have been provided. This Boolean will be `true` if you've manually indicated that all executives are provided via [the `executives_provided` parameter](https://stripe.com/docs/api/accounts/update#update_account-company-executives_provided), or if Stripe determined that sufficient executives were provided.
+- `company_export_license_id` (String) The export license ID number of the company, also referred as Import Export Code (India only).
+- `company_export_purpose_code` (String) The purpose code to use for export transactions (India only).
 - `company_name` (String) The company's legal name.
 - `company_name_kana` (String) The Kana variation of the company's legal name (Japan only).
 - `company_name_kanji` (String) The Kanji variation of the company's legal name (Japan only).
@@ -103,8 +125,12 @@ description: |-
 - `company_vat_id` (String)
 - `company_verification_document_back` (String) The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
 - `company_verification_document_front` (String) The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
+- `controller_fees_payer` (String) A value indicating the responsible payer of a bundle of Stripe fees for pricing-control eligible products on this account. Learn more about [fee behavior on connected accounts](https://docs.stripe.com/connect/direct-charges-fee-payer-behavior).
+- `controller_losses_payments` (String) A value indicating who is liable when this account can't pay back negative balances from payments.
+- `controller_requirement_collection` (String) A value indicating responsibility for collecting requirements on this account. Only returned when the Connect application retrieving the resource controls the account.
+- `controller_stripe_dashboard_type` (String) A value indicating the Stripe dashboard this account has access to independent of the Connect application.
 - `country` (String) The country in which the account holder resides, or in which the business is legally established. This should be an ISO 3166-1 alpha-2 country code. For example, if you are in the United States and the business for which you're creating an account is legally represented in Canada, you would use `CA` as the country for the account being created. Available countries include [Stripe's global markets](https://stripe.com/global) as well as countries where [cross-border payouts](https://stripe.com/docs/connect/cross-border-payouts) are supported.
-- `default_currency` (String) Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://stripe.com/docs/payouts).
+- `default_currency` (String) Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://docs.stripe.com/payouts).
 - `documents_bank_account_ownership_verification_files` (List of String)
 - `documents_company_license_files` (List of String)
 - `documents_company_memorandum_of_association_files` (List of String)
@@ -112,8 +138,8 @@ description: |-
 - `documents_company_registration_verification_files` (List of String)
 - `documents_company_tax_id_verification_files` (List of String)
 - `documents_proof_of_registration_files` (List of String)
-- `email` (String) The email address of the account holder. This is only to make the account easier to identify to you. Stripe only emails Custom accounts with your consent.
-- `external_account` (String) A card or bank account to attach to the account for receiving [payouts](https://stripe.com/docs/connect/bank-debit-card-payouts) (you won’t be able to use it for top-ups). You can provide either a token, like the ones returned by [Stripe.js](https://stripe.com/docs/js), or a dictionary, as documented in the `external_account` parameter for [bank account](https://stripe.com/docs/api#account_create_bank_account) creation. <br><br>By default, providing an external account sets it as the new default external account for its currency, and deletes the old default if one exists. To add additional external accounts without replacing the existing default for the currency, use the [bank account](https://stripe.com/docs/api#account_create_bank_account) or [card creation](https://stripe.com/docs/api#account_create_card) APIs.
+- `email` (String) The email address of the account holder. This is only to make the account easier to identify to you. If [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts, Stripe doesn't email the account without your consent.
+- `external_account` (String) A card or bank account to attach to the account for receiving [payouts](/connect/bank-debit-card-payouts) (you won’t be able to use it for top-ups). You can provide either a token, like the ones returned by [Stripe.js](/js), or a dictionary, as documented in the `external_account` parameter for [bank account](/api#account_create_bank_account) creation. <br><br>By default, providing an external account sets it as the new default external account for its currency, and deletes the old default if one exists. To add additional external accounts without replacing the existing default for the currency, use the [bank account](/api#account_create_bank_account) or [card creation](/api#account_create_card) APIs. After you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property can only be updated for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.
 - `individual_address_city` (String) City, district, suburb, town, or village.
 - `individual_address_country` (String) Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
 - `individual_address_kana_city` (String) City/Ward.
@@ -158,11 +184,17 @@ description: |-
 - `individual_registered_address_line2` (String) Address line 2 (e.g., apartment, suite, unit, or building).
 - `individual_registered_address_postal_code` (String) ZIP or postal code.
 - `individual_registered_address_state` (String) State, county, province, or region.
+- `individual_relationship_director` (Boolean) Whether the person is a director of the account's legal entity. Directors are typically members of the governing board of the company, or responsible for ensuring the company meets its regulatory obligations.
+- `individual_relationship_executive` (Boolean) Whether the person has significant responsibility to control, manage, or direct the organization.
+- `individual_relationship_owner` (Boolean) Whether the person is an owner of the account’s legal entity.
+- `individual_relationship_percent_ownership` (Number) The percent owned by the person of the account's legal entity.
+- `individual_relationship_title` (String) The person's title (e.g., CEO, Support Engineer).
 - `individual_ssn_last_4` (String)
 - `individual_verification_additional_document_back` (String) The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
 - `individual_verification_additional_document_front` (String) The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
 - `individual_verification_document_back` (String) The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
 - `individual_verification_document_front` (String) The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
+- `settings_bacs_debit_payments_display_name` (String) The Bacs Direct Debit display name for this account. For payments made with Bacs Direct Debit, this name appears on the mandate as the statement descriptor. Mobile banking apps display it as the name of the business. To use custom branding, set the Bacs Direct Debit Display Name during or right after creation. Custom branding incurs an additional monthly fee for the platform. The fee appears 5 business days after requesting Bacs. If you don't set the display name before requesting Bacs capability, it's automatically set as "Stripe" and the account is onboarded to Stripe branding, which is free.
 - `settings_branding_icon` (String) (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) An icon for the account. Must be square and at least 128px x 128px.
 - `settings_branding_logo` (String) (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) A logo for the account that will be used in Checkout instead of the icon and without the account's name next to it if provided. Must be at least 128px x 128px.
 - `settings_branding_primary_color` (String) A CSS hex color value representing the primary branding color for this account
@@ -176,9 +208,9 @@ description: |-
 - `settings_card_payments_statement_descriptor_prefix_kana` (String) The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kana` specified on the charge. `statement_descriptor_prefix_kana` is useful for maximizing descriptor space for the dynamic portion.
 - `settings_card_payments_statement_descriptor_prefix_kanji` (String) The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kanji` specified on the charge. `statement_descriptor_prefix_kanji` is useful for maximizing descriptor space for the dynamic portion.
 - `settings_payments_statement_descriptor` (String) The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge.
-- `settings_payments_statement_descriptor_kana` (String) The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only)
-- `settings_payments_statement_descriptor_kanji` (String) The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only)
-- `settings_payouts_debit_negative_balances` (Boolean) A Boolean indicating if Stripe should try to reclaim negative balances from an attached bank account. See our [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances) documentation for details. Default value is `false` for Custom accounts, otherwise `true`.
+- `settings_payments_statement_descriptor_kana` (String) The Kana variation of `statement_descriptor` used for charges in Japan. Japanese statement descriptors have [special requirements](https://docs.stripe.com/get-started/account/statement-descriptors#set-japanese-statement-descriptors).
+- `settings_payments_statement_descriptor_kanji` (String) The Kanji variation of `statement_descriptor` used for charges in Japan. Japanese statement descriptors have [special requirements](https://docs.stripe.com/get-started/account/statement-descriptors#set-japanese-statement-descriptors).
+- `settings_payouts_debit_negative_balances` (Boolean) A Boolean indicating if Stripe should try to reclaim negative balances from an attached bank account. See [Understanding Connect account balances](/connect/account-balances) for details. The default value is `false` when [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts, otherwise `true`.
 - `settings_payouts_schedule_delay_days` (String) The number of days charges for the account will be held before being paid out.
 - `settings_payouts_schedule_interval` (String) How frequently funds will be paid out. One of `manual` (payouts only created via API call), `daily`, `weekly`, or `monthly`.
 - `settings_payouts_schedule_monthly_anchor` (Number) The day of the month funds will be paid out. Only shown if `interval` is monthly. Payouts scheduled between the 29th and 31st of the month are sent on the last day of shorter months.
@@ -203,44 +235,43 @@ description: |-
 - `controller_is_controller` (Boolean) `true` if the Connect application retrieving the resource controls the account and can therefore exercise [platform controls](https://stripe.com/docs/connect/platform-controls-for-standard-accounts). Otherwise, this field is null.
 - `controller_type` (String) The controller type. Can be `application`, if a Connect application controls the account, or `account`, if the account controls itself.
 - `created` (Number) Time at which the account was connected. Measured in seconds since the Unix epoch.
-- `details_submitted` (Boolean) Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
+- `details_submitted` (Boolean) Whether account details have been submitted. Accounts with Stripe Dashboard access, which includes Standard accounts, cannot receive payouts before this is true. Accounts where this is false should be directed to [an onboarding flow](/connect/onboarding) to finish submitting account details.
 - `external_accounts_has_more` (Boolean) True if this list has another page of items after this one that can be fetched.
 - `external_accounts_object` (String) String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
 - `external_accounts_url` (String) The URL where this list can be accessed.
 - `future_requirements_alternatives` (List of Object) Fields that are due and can be satisfied by providing the corresponding alternative fields instead. (see [below for nested schema](#nestedatt--future_requirements_alternatives))
 - `future_requirements_current_deadline` (Number) Date on which `future_requirements` merges with the main `requirements` hash and `future_requirements` becomes empty. After the transition, `currently_due` requirements may immediately become `past_due`, but the account may also be given a grace period depending on its enablement state prior to transitioning.
 - `future_requirements_currently_due` (List of String) Fields that need to be collected to keep the account enabled. If not collected by `future_requirements[current_deadline]`, these fields will transition to the main `requirements` hash.
-- `future_requirements_disabled_reason` (String) This is typed as a string for consistency with `requirements.disabled_reason`, but it safe to assume `future_requirements.disabled_reason` is empty because fields in `future_requirements` will never disable the account.
+- `future_requirements_disabled_reason` (String) This is typed as a string for consistency with `requirements.disabled_reason`.
 - `future_requirements_errors` (List of Object) Fields that are `currently_due` and need to be collected again because validation or verification failed. (see [below for nested schema](#nestedatt--future_requirements_errors))
 - `future_requirements_eventually_due` (List of String) Fields that need to be collected assuming all volume thresholds are reached. As they become required, they appear in `currently_due` as well.
 - `future_requirements_past_due` (List of String) Fields that weren't collected by `requirements.current_deadline`. These fields need to be collected to enable the capability on the account. New fields will never appear here; `future_requirements.past_due` will always be a subset of `requirements.past_due`.
-- `future_requirements_pending_verification` (List of String) Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
+- `future_requirements_pending_verification` (List of String) Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`. Fields might appear in `eventually_due` or `currently_due` and in `pending_verification` if verification fails but another verification is still pending.
 - `id` (String) Unique identifier for the object.
 - `individual_account` (String) The account the person is associated with.
+- `individual_additional_tos_acceptances_account_date` (Number) The Unix timestamp marking when the legal guardian accepted the service agreement.
+- `individual_additional_tos_acceptances_account_ip` (String) The IP address from which the legal guardian accepted the service agreement.
+- `individual_additional_tos_acceptances_account_user_agent` (String) The user agent of the browser from which the legal guardian accepted the service agreement.
 - `individual_created` (Number) Time at which the object was created. Measured in seconds since the Unix epoch.
 - `individual_future_requirements_alternatives` (List of Object) Fields that are due and can be satisfied by providing the corresponding alternative fields instead. (see [below for nested schema](#nestedatt--individual_future_requirements_alternatives))
 - `individual_future_requirements_currently_due` (List of String) Fields that need to be collected to keep the person's account enabled. If not collected by the account's `future_requirements[current_deadline]`, these fields will transition to the main `requirements` hash, and may immediately become `past_due`, but the account may also be given a grace period depending on the account's enablement state prior to transition.
 - `individual_future_requirements_errors` (List of Object) Fields that are `currently_due` and need to be collected again because validation or verification failed. (see [below for nested schema](#nestedatt--individual_future_requirements_errors))
 - `individual_future_requirements_eventually_due` (List of String) Fields that need to be collected assuming all volume thresholds are reached. As they become required, they appear in `currently_due` as well, and the account's `future_requirements[current_deadline]` becomes set.
 - `individual_future_requirements_past_due` (List of String) Fields that weren't collected by the account's `requirements.current_deadline`. These fields need to be collected to enable the person's account. New fields will never appear here; `future_requirements.past_due` will always be a subset of `requirements.past_due`.
-- `individual_future_requirements_pending_verification` (List of String) Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`.
+- `individual_future_requirements_pending_verification` (List of String) Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due` or `currently_due`. Fields might appear in `eventually_due` or `currently_due` and in `pending_verification` if verification fails but another verification is still pending.
 - `individual_id` (String) Unique identifier for the object.
-- `individual_id_number_provided` (Boolean) Whether the person's `id_number` was provided.
+- `individual_id_number_provided` (Boolean) Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).
 - `individual_id_number_secondary_provided` (Boolean) Whether the person's `id_number_secondary` was provided.
 - `individual_nationality` (String) The country where the person is a national.
 - `individual_object` (String) String representing the object's type. Objects of the same type share the same value.
-- `individual_relationship_director` (Boolean) Whether the person is a director of the account's legal entity. Directors are typically members of the governing board of the company, or responsible for ensuring the company meets its regulatory obligations.
-- `individual_relationship_executive` (Boolean) Whether the person has significant responsibility to control, manage, or direct the organization.
-- `individual_relationship_owner` (Boolean) Whether the person is an owner of the account’s legal entity.
-- `individual_relationship_percent_ownership` (Number) The percent owned by the person of the account's legal entity.
+- `individual_relationship_legal_guardian` (Boolean) Whether the person is the legal guardian of the account's representative.
 - `individual_relationship_representative` (Boolean) Whether the person is authorized as the primary representative of the account. This is the person nominated by the business to provide information about themselves, and general information about the account. There can only be one representative at any given time. At the time the account is created, this person should be set to the person responsible for opening the account.
-- `individual_relationship_title` (String) The person's title (e.g., CEO, Support Engineer).
 - `individual_requirements_alternatives` (List of Object) Fields that are due and can be satisfied by providing the corresponding alternative fields instead. (see [below for nested schema](#nestedatt--individual_requirements_alternatives))
 - `individual_requirements_currently_due` (List of String) Fields that need to be collected to keep the person's account enabled. If not collected by the account's `current_deadline`, these fields appear in `past_due` as well, and the account is disabled.
 - `individual_requirements_errors` (List of Object) Fields that are `currently_due` and need to be collected again because validation or verification failed. (see [below for nested schema](#nestedatt--individual_requirements_errors))
 - `individual_requirements_eventually_due` (List of String) Fields that need to be collected assuming all volume thresholds are reached. As they become required, they appear in `currently_due` as well, and the account's `current_deadline` becomes set.
 - `individual_requirements_past_due` (List of String) Fields that weren't collected by the account's `current_deadline`. These fields need to be collected to enable the person's account.
-- `individual_requirements_pending_verification` (List of String) Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
+- `individual_requirements_pending_verification` (List of String) Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
 - `individual_ssn_last_4_provided` (Boolean) Whether the last four digits of the person's Social Security number have been provided (U.S. only).
 - `individual_verification_additional_document_details` (String) A user-displayable string describing the verification state of this document. For example, if a document is uploaded and the picture is too fuzzy, this may say "Identity document is too unclear to read".
 - `individual_verification_additional_document_details_code` (String) One of `document_corrupt`, `document_country_not_supported`, `document_expired`, `document_failed_copy`, `document_failed_other`, `document_failed_test_mode`, `document_fraudulent`, `document_failed_greyscale`, `document_incomplete`, `document_invalid`, `document_manipulated`, `document_missing_back`, `document_missing_front`, `document_not_readable`, `document_not_uploaded`, `document_photo_mismatch`, `document_too_large`, or `document_type_not_supported`. A machine-readable code specifying the verification state for this document.
@@ -254,16 +285,17 @@ description: |-
 - `requirements_alternatives` (List of Object) Fields that are due and can be satisfied by providing the corresponding alternative fields instead. (see [below for nested schema](#nestedatt--requirements_alternatives))
 - `requirements_current_deadline` (Number) Date by which the fields in `currently_due` must be collected to keep the account enabled. These fields may disable the account sooner if the next threshold is reached before they are collected.
 - `requirements_currently_due` (List of String) Fields that need to be collected to keep the account enabled. If not collected by `current_deadline`, these fields appear in `past_due` as well, and the account is disabled.
-- `requirements_disabled_reason` (String) If the account is disabled, this string describes why. Can be `requirements.past_due`, `requirements.pending_verification`, `listed`, `platform_paused`, `rejected.fraud`, `rejected.listed`, `rejected.terms_of_service`, `rejected.other`, `under_review`, or `other`.
+- `requirements_disabled_reason` (String) If the account is disabled, this string describes why. [Learn more about handling verification issues](https://stripe.com/docs/connect/handling-api-verification). Can be `action_required.requested_capabilities`, `requirements.past_due`, `requirements.pending_verification`, `listed`, `platform_paused`, `rejected.fraud`, `rejected.incomplete_verification`, `rejected.listed`, `rejected.other`, `rejected.terms_of_service`, `under_review`, or `other`.
 - `requirements_errors` (List of Object) Fields that are `currently_due` and need to be collected again because validation or verification failed. (see [below for nested schema](#nestedatt--requirements_errors))
 - `requirements_eventually_due` (List of String) Fields that need to be collected assuming all volume thresholds are reached. As they become required, they appear in `currently_due` as well, and `current_deadline` becomes set.
 - `requirements_past_due` (List of String) Fields that weren't collected by `current_deadline`. These fields need to be collected to enable the account.
-- `requirements_pending_verification` (List of String) Fields that may become required depending on the results of verification or review. Will be an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`.
-- `settings_bacs_debit_payments_display_name` (String) The Bacs Direct Debit Display Name for this account. For payments made with Bacs Direct Debit, this will appear on the mandate, and as the statement descriptor.
+- `requirements_pending_verification` (List of String) Fields that might become required depending on the results of verification or review. It's an empty array unless an asynchronous verification is pending. If verification fails, these fields move to `eventually_due`, `currently_due`, or `past_due`. Fields might appear in `eventually_due`, `currently_due`, or `past_due` and in `pending_verification` if verification fails but another verification is still pending.
+- `settings_bacs_debit_payments_service_user_number` (String) The Bacs Direct Debit Service user number for this account. For payments made with Bacs Direct Debit, this number is a unique identifier of the account with our banking partners.
 - `settings_dashboard_display_name` (String) The display name for this account. This is used on the Stripe Dashboard to differentiate between accounts.
 - `settings_dashboard_timezone` (String) The timezone used in the Stripe Dashboard for this account. A list of possible time zone values is maintained at the [IANA Time Zone Database](http://www.iana.org/time-zones).
-- `settings_payments_statement_descriptor_prefix_kana` (String) The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kana` specified on the charge. `statement_descriptor_prefix_kana` is useful for maximizing descriptor space for the dynamic portion.
-- `settings_payments_statement_descriptor_prefix_kanji` (String) The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kanji` specified on the charge. `statement_descriptor_prefix_kanji` is useful for maximizing descriptor space for the dynamic portion.
+- `settings_invoices_default_account_tax_ids` (List of String) The list of default Account Tax IDs to automatically include on invoices. Account Tax IDs get added when an invoice is finalized.
+- `settings_payments_statement_descriptor_prefix_kana` (String) The Kana variation of `statement_descriptor_prefix` used for card charges in Japan. Japanese statement descriptors have [special requirements](https://docs.stripe.com/get-started/account/statement-descriptors#set-japanese-statement-descriptors).
+- `settings_payments_statement_descriptor_prefix_kanji` (String) The Kanji variation of `statement_descriptor_prefix` used for card charges in Japan. Japanese statement descriptors have [special requirements](https://docs.stripe.com/get-started/account/statement-descriptors#set-japanese-statement-descriptors).
 - `settings_sepa_debit_payments_creditor_id` (String) SEPA creditor identifier that identifies the company making the payment.
 
 <a id="nestedatt--future_requirements_alternatives"></a>

@@ -22,36 +22,47 @@ description: |-
 ### Optional
 
 - `add_invoice_items` (Block List) A list of prices and quantities that will generate invoice items appended to the next invoice for this subscription. You may pass up to 20 items. (see [below for nested schema](#nestedblock--add_invoice_items))
-- `application_fee_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account. The request must be made by a platform account on a connected account in order to set an application fee percentage. For more information, see the application fees [documentation](https://stripe.com/docs/connect/subscriptions#collecting-fees-on-subscriptions).
+- `application_fee_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account. The request must be made by a platform account on a connected account in order to set an application fee percentage. For more information, see the application fees [documentation](https://stripe.com/docs/connect/subscriptions#collecting-fees-on-subscriptions).
 - `automatic_tax_enabled` (Boolean) Whether Stripe automatically computes tax on this subscription.
+- `automatic_tax_liability_account` (String) The connected account being referenced when `type` is `account`.
+- `automatic_tax_liability_type` (String) Type of the account referenced.
 - `backdate_start_date` (Number) For new subscriptions, a past timestamp to backdate the subscription's start date to. If set, the first invoice will contain a proration for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor.
-- `billing_cycle_anchor` (Number) A future timestamp to anchor the subscription's [billing cycle](https://stripe.com/docs/subscriptions/billing-cycle). This is used to determine the date of the first full invoice, and, for plans with `month` or `year` intervals, the day of the month for subsequent invoices. The timestamp is in UTC format.
+- `billing_cycle_anchor` (Number) A future timestamp in UTC format to anchor the subscription's [billing cycle](https://stripe.com/docs/subscriptions/billing-cycle). The anchor is the reference point that aligns future billing cycle dates. It sets the day of week for `week` intervals, the day of month for `month` and `year` intervals, and the month of year for `year` intervals.
+- `billing_cycle_anchor_config_day_of_month` (Number) The day of the month of the billing_cycle_anchor.
+- `billing_cycle_anchor_config_hour` (Number) The hour of the day of the billing_cycle_anchor.
+- `billing_cycle_anchor_config_minute` (Number) The minute of the hour of the billing_cycle_anchor.
+- `billing_cycle_anchor_config_month` (Number) The month to start full cycle billing periods.
+- `billing_cycle_anchor_config_second` (Number) The second of the minute of the billing_cycle_anchor.
 - `billing_thresholds_amount_gte` (Number) Monetary threshold that triggers the subscription to create an invoice
 - `billing_thresholds_reset_billing_cycle_anchor` (Boolean) Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
 - `cancel_at` (Number) A timestamp at which the subscription should cancel. If set to a date before the current period ends, this will cause a proration if prorations have been enabled using `proration_behavior`. If set during a future period, this will always cause a proration for that period.
-- `cancel_at_period_end` (Boolean) Boolean indicating whether this subscription should cancel at the end of the current period.
+- `cancel_at_period_end` (Boolean) Indicate whether this subscription should cancel at the end of the current period (`current_period_end`). Defaults to `false`.
 - `collection_method` (String) Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay this subscription at the end of the cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`. Defaults to `charge_automatically`.
-- `coupon` (String) The ID of the coupon to apply to this subscription. A coupon applied to a subscription will only affect invoices created for that particular subscription.
+- `coupon` (String) The ID of the coupon to apply to this subscription. A coupon applied to a subscription will only affect invoices created for that particular subscription. This field has been deprecated and will be removed in a future API version. Use `discounts` instead.
 - `currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
 - `days_until_due` (Number) Number of days a customer has to pay invoices generated by this subscription. Valid only for subscriptions where `collection_method` is set to `send_invoice`.
 - `default_payment_method` (String) ID of the default payment method for the subscription. It must belong to the customer associated with the subscription. This takes precedence over `default_source`. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).
 - `default_source` (String) ID of the default payment source for the subscription. It must belong to the customer associated with the subscription and be in a chargeable state. If `default_payment_method` is also set, `default_payment_method` will take precedence. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).
 - `default_tax_rates` (List of String) The tax rates that will apply to any subscription item that does not have `tax_rates` set. Invoices created will have their `default_tax_rates` populated from the subscription.
-- `description` (String) The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces.
+- `description` (String) The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+- `discounts` (Block List) The coupons to redeem into discounts for the subscription. If not specified or empty, inherits the discount from the subscription's customer. (see [below for nested schema](#nestedblock--discounts))
+- `invoice_settings_account_tax_ids` (List of String) The account tax IDs associated with the subscription. Will be set on invoices generated by the subscription.
+- `invoice_settings_issuer_account` (String) The connected account being referenced when `type` is `account`.
+- `invoice_settings_issuer_type` (String) Type of the account referenced.
 - `items` (Block List) A list of up to 20 subscription items, each with an attached price. (see [below for nested schema](#nestedblock--items))
-- `off_session` (Boolean) Indicates if a customer is on or off-session while an invoice payment is attempted.
+- `off_session` (Boolean) Indicates if a customer is on or off-session while an invoice payment is attempted. Defaults to `false` (on-session).
 - `on_behalf_of` (String) The account on behalf of which to charge, for each of the subscription's invoices.
 - `payment_behavior` (String) Only applies to subscriptions with `collection_method=charge_automatically`.
 
-Use `allow_incomplete` to create subscriptions with `status=incomplete` if the first invoice cannot be paid. Creating subscriptions with this status allows you to manage scenarios where additional user actions are needed to pay a subscription's invoice. For example, SCA regulation may require 3DS authentication to complete payment. See the [SCA Migration Guide](https://stripe.com/docs/billing/migration/strong-customer-authentication) for Billing to learn more. This is the default behavior.
+Use `allow_incomplete` to create Subscriptions with `status=incomplete` if the first invoice can't be paid. Creating Subscriptions with this status allows you to manage scenarios where additional customer actions are needed to pay a subscription's invoice. For example, SCA regulation may require 3DS authentication to complete payment. See the [SCA Migration Guide](https://stripe.com/docs/billing/migration/strong-customer-authentication) for Billing to learn more. This is the default behavior.
 
-Use `default_incomplete` to create Subscriptions with `status=incomplete` when the first invoice requires payment, otherwise start as active. Subscriptions transition to `status=active` when successfully confirming the payment intent on the first invoice. This allows simpler management of scenarios where additional user actions are needed to pay a subscription’s invoice. Such as failed payments, [SCA regulation](https://stripe.com/docs/billing/migration/strong-customer-authentication), or collecting a mandate for a bank debit payment method. If the payment intent is not confirmed within 23 hours subscriptions transition to `status=incomplete_expired`, which is a terminal state.
+Use `default_incomplete` to create Subscriptions with `status=incomplete` when the first invoice requires payment, otherwise start as active. Subscriptions transition to `status=active` when successfully confirming the PaymentIntent on the first invoice. This allows simpler management of scenarios where additional customer actions are needed to pay a subscription’s invoice, such as failed payments, [SCA regulation](https://stripe.com/docs/billing/migration/strong-customer-authentication), or collecting a mandate for a bank debit payment method. If the PaymentIntent is not confirmed within 23 hours Subscriptions transition to `status=incomplete_expired`, which is a terminal state.
 
-Use `error_if_incomplete` if you want Stripe to return an HTTP 402 status code if a subscription's first invoice cannot be paid. For example, if a payment method requires 3DS authentication due to SCA regulation and further user action is needed, this parameter does not create a subscription and returns an error instead. This was the default behavior for API versions prior to 2019-03-14. See the [changelog](https://stripe.com/docs/upgrades#2019-03-14) to learn more.
+Use `error_if_incomplete` if you want Stripe to return an HTTP 402 status code if a subscription's first invoice can't be paid. For example, if a payment method requires 3DS authentication due to SCA regulation and further customer action is needed, this parameter doesn't create a Subscription and returns an error instead. This was the default behavior for API versions prior to 2019-03-14. See the [changelog](https://stripe.com/docs/upgrades#2019-03-14) to learn more.
 
-`pending_if_incomplete` is only used with updates and cannot be passed when creating a subscription.
+`pending_if_incomplete` is only used with updates and cannot be passed when creating a Subscription.
 
-Subscriptions with `collection_method=send_invoice` are automatically activated regardless of the first invoice status.
+Subscriptions with `collection_method=send_invoice` are automatically activated regardless of the first Invoice status.
 - `payment_settings_payment_method_options_acss_debit_mandate_options_transaction_type` (String) Transaction type of the mandate.
 - `payment_settings_payment_method_options_acss_debit_verification_method` (String) Bank account verification method.
 - `payment_settings_payment_method_options_bancontact_preferred_language` (String) Preferred language of the Bancontact authorization page that the customer is redirected to.
@@ -59,28 +70,34 @@ Subscriptions with `collection_method=send_invoice` are automatically activated 
 - `payment_settings_payment_method_options_card_mandate_options_amount_type` (String) One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
 - `payment_settings_payment_method_options_card_mandate_options_description` (String) A description of the mandate or subscription that is meant to be displayed to the customer.
 - `payment_settings_payment_method_options_card_network` (String) Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
-- `payment_settings_payment_method_options_card_request_three_d_secure` (String) We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
-- `payment_settings_payment_method_options_customer_balance_bank_transfer_eu_bank_transfer_country` (String) The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
-- `payment_settings_payment_method_options_customer_balance_bank_transfer_type` (String) The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
+- `payment_settings_payment_method_options_card_request_three_d_secure` (String) We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+- `payment_settings_payment_method_options_customer_balance_bank_transfer_eu_bank_transfer_country` (String) The desired country code of the bank account information. Permitted values include: `BE`, `DE`, `ES`, `FR`, `IE`, or `NL`.
+- `payment_settings_payment_method_options_customer_balance_bank_transfer_type` (String) The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, `mx_bank_transfer`, or `us_bank_transfer`.
 - `payment_settings_payment_method_options_customer_balance_funding_type` (String) The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
+- `payment_settings_payment_method_options_us_bank_account_financial_connections_filters_account_subcategories` (List of String) The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
 - `payment_settings_payment_method_options_us_bank_account_financial_connections_permissions` (List of String) The list of permissions to request. The `payment_method` permission must be included.
+- `payment_settings_payment_method_options_us_bank_account_financial_connections_prefetch` (List of String) Data features requested to be retrieved upon account creation.
 - `payment_settings_payment_method_options_us_bank_account_verification_method` (String) Bank account verification method.
 - `payment_settings_payment_method_types` (List of String) The list of payment method types to provide to every invoice created by the subscription. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice’s default payment method, the subscription’s default payment method, the customer’s default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
-- `payment_settings_save_default_payment_method` (String) Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
+- `payment_settings_save_default_payment_method` (String) Configure whether Stripe updates `subscription.default_payment_method` when payment succeeds. Defaults to `off`.
 - `pending_invoice_item_interval_interval` (String) Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
 - `pending_invoice_item_interval_interval_count` (Number) The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-- `promotion_code` (String) The API ID of a promotion code to apply to this subscription. A promotion code applied to a subscription will only affect invoices created for that particular subscription.
-- `proration_behavior` (String) Determines how to handle [prorations](https://stripe.com/docs/subscriptions/billing-cycle#prorations) resulting from the `billing_cycle_anchor`. If no value is passed, the default is `create_prorations`.
-- `transfer_data_amount_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+- `promotion_code` (String) The promotion code to apply to this subscription. A promotion code applied to a subscription will only affect invoices created for that particular subscription. This field has been deprecated and will be removed in a future API version. Use `discounts` instead.
+- `proration_behavior` (String) Determines how to handle [prorations](https://stripe.com/docs/billing/subscriptions/prorations) resulting from the `billing_cycle_anchor`. If no value is passed, the default is `create_prorations`.
+- `transfer_data_amount_percent` (Number) A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
 - `transfer_data_destination` (String) The account where funds from the payment will be transferred to upon payment success.
-- `trial_end` (String) Unix timestamp representing the end of the trial period the customer will get before being charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. If set, trial_end will override the default trial period of the plan the customer is being subscribed to. The special value `now` can be provided to end the customer's trial immediately. Can be at most two years from `billing_cycle_anchor`. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
+- `trial_end` (String) Unix timestamp representing the end of the trial period the customer will get before being charged for the first time. If set, trial_end will override the default trial period of the plan the customer is being subscribed to. The special value `now` can be provided to end the customer's trial immediately. Can be at most two years from `billing_cycle_anchor`. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
 - `trial_from_plan` (Boolean) Indicates if a plan's `trial_period_days` should be applied to the subscription. Setting `trial_end` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trial_end` is not allowed. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
 - `trial_period_days` (Number) Integer representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
+- `trial_settings_end_behavior_missing_payment_method` (String) Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
 
 ### Read-Only
 
 - `application` (String) ID of the Connect Application that created the subscription.
 - `canceled_at` (Number) If the subscription has been canceled, the date of that cancellation. If the subscription was canceled with `cancel_at_period_end`, `canceled_at` will reflect the time of the most recent update request, not the end of the subscription period when the subscription is automatically moved to a canceled state.
+- `cancellation_details_comment` (String) Additional comments about why the user canceled the subscription, if the subscription was canceled explicitly by the user.
+- `cancellation_details_feedback` (String) The customer submitted reason for why they canceled, if the subscription was canceled explicitly by the user.
+- `cancellation_details_reason` (String) Why this subscription was canceled.
 - `created` (Number) Time at which the object was created. Measured in seconds since the Unix epoch.
 - `current_period_end` (Number) End of the current period that the subscription has been invoiced for. At the end of this period, a new invoice will be created.
 - `current_period_start` (Number) Start of the current period that the subscription has been invoiced for.
@@ -98,7 +115,7 @@ Subscriptions with `collection_method=send_invoice` are automatically activated 
 - `discount_coupon_metadata` (Map of String) Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
 - `discount_coupon_name` (String) Name of the coupon displayed to customers on for instance invoices or receipts.
 - `discount_coupon_object` (String) String representing the object's type. Objects of the same type share the same value.
-- `discount_coupon_percent_off` (Number) Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a %s100 invoice %s50 instead.
+- `discount_coupon_percent_off` (Number) Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
 - `discount_coupon_redeem_by` (Number) Date after which the coupon can no longer be redeemed.
 - `discount_coupon_times_redeemed` (Number) Number of times this coupon has been applied to a customer.
 - `discount_coupon_valid` (Boolean) Taking account of the above properties, whether this coupon can still be applied to a customer.
@@ -111,6 +128,7 @@ Subscriptions with `collection_method=send_invoice` are automatically activated 
 - `discount_promotion_code` (String) The promotion code applied to create this discount.
 - `discount_start` (Number) Date that the coupon was applied.
 - `discount_subscription` (String) The subscription that this coupon is applied to, if it is applied to a particular subscription.
+- `discount_subscription_item` (String) The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
 - `ended_at` (Number) If the subscription has ended, the date the subscription ended.
 - `id` (String) Unique identifier for the object.
 - `latest_invoice` (String) The most recent invoice this subscription has generated.
@@ -127,13 +145,15 @@ Subscriptions with `collection_method=send_invoice` are automatically activated 
 - `pending_update_trial_from_plan` (Boolean) Indicates if a plan's `trial_period_days` should be applied to the subscription. Setting `trial_end` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trial_end` is not allowed. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
 - `schedule` (String) The schedule attached to the subscription
 - `start_date` (Number) Date when the subscription was first created. The date might differ from the `created` date due to backdating.
-- `status` (String) Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, or `unpaid`. 
+- `status` (String) Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, `unpaid`, or `paused`. 
 
-For `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this state can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` state. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal state, the open invoice will be voided and no further invoices will be generated. 
+For `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this status can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` status. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal status, the open invoice will be voided and no further invoices will be generated. 
 
 A subscription that is currently in a trial period is `trialing` and moves to `active` when the trial period is over. 
 
-If subscription `collection_method=charge_automatically` it becomes `past_due` when payment to renew it fails and `canceled` or `unpaid` (depending on your subscriptions settings) when Stripe has exhausted all payment retry attempts. 
+A subscription can only enter a `paused` status [when a trial ends without a payment method](/billing/subscriptions/trials#create-free-trials-without-payment). A `paused` subscription doesn't generate invoices and can be resumed after your customer adds their payment method. The `paused` status is different from [pausing collection](/billing/subscriptions/pause-payment), which still generates invoices and leaves the subscription's status unchanged. 
+
+If subscription `collection_method=charge_automatically`, it becomes `past_due` when payment is required but cannot be paid (due to failed payment or awaiting additional user actions). Once Stripe has exhausted all payment retry attempts, the subscription will become `canceled` or `unpaid` (depending on your subscriptions settings). 
 
 If subscription `collection_method=send_invoice` it becomes `past_due` when its invoice is not paid by the due date, and `canceled` or `unpaid` if it is still not paid by an additional deadline after that. Note that when a subscription has a status of `unpaid`, no subsequent invoices will be attempted (invoices will be created, but then immediately automatically closed). After receiving updated payment information from a customer, you may choose to reopen and pay their closed invoices.
 - `test_clock` (String) ID of the test clock this subscription belongs to.
@@ -144,6 +164,7 @@ If subscription `collection_method=send_invoice` it becomes `past_due` when its 
 
 Optional:
 
+- `discounts` (Block List) (see [below for nested schema](#nestedblock--add_invoice_items--discounts))
 - `price` (String)
 - `price_data_currency` (String)
 - `price_data_product` (String)
@@ -153,6 +174,39 @@ Optional:
 - `quantity` (Number)
 - `tax_rates` (List of String)
 
+<a id="nestedblock--add_invoice_items--discounts"></a>
+### Nested Schema for `add_invoice_items.discounts`
+
+Optional:
+
+- `coupon` (String)
+- `discount` (String)
+- `promotion_code` (String)
+
+
+
+<a id="nestedblock--discounts"></a>
+### Nested Schema for `discounts`
+
+Optional:
+
+- `coupon` (String)
+- `discount` (String)
+- `promotion_code` (String) The promotion code applied to create this discount.
+
+Read-Only:
+
+- `checkout_session` (String) The Checkout session that this coupon is applied to, if it is applied to a particular session in payment mode. Will not be present for subscription mode.
+- `customer` (String) The ID of the customer associated with this discount.
+- `end` (Number) If the coupon has a duration of `repeating`, the date that this discount will end. If the coupon has a duration of `once` or `forever`, this attribute will be null.
+- `id` (String) The ID of the discount object. Discounts cannot be fetched by ID. Use `expand[]=discounts` in API calls to expand discount IDs in an array.
+- `invoice` (String) The invoice that the discount's coupon was applied to, if it was applied directly to a particular invoice.
+- `invoice_item` (String) The invoice item `id` (or invoice line item `id` for invoice line items of type='subscription') that the discount's coupon was applied to, if it was applied directly to a particular invoice item or invoice line item.
+- `object` (String) String representing the object's type. Objects of the same type share the same value.
+- `start` (Number) Date that the coupon was applied.
+- `subscription` (String) The subscription that this coupon is applied to, if it is applied to a particular subscription.
+- `subscription_item` (String) The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
+
 
 <a id="nestedblock--items"></a>
 ### Nested Schema for `items`
@@ -160,6 +214,7 @@ Optional:
 Optional:
 
 - `billing_thresholds_usage_gte` (Number)
+- `discounts` (Block List) (see [below for nested schema](#nestedblock--items--discounts))
 - `metadata` (Map of String)
 - `price` (String)
 - `price_data_currency` (String)
@@ -171,6 +226,16 @@ Optional:
 - `price_data_unit_amount_decimal` (String)
 - `quantity` (Number)
 - `tax_rates` (List of String)
+
+<a id="nestedblock--items--discounts"></a>
+### Nested Schema for `items.discounts`
+
+Optional:
+
+- `coupon` (String)
+- `discount` (String)
+- `promotion_code` (String)
+
 
 
 <a id="nestedatt--discount_coupon_currency_options"></a>
@@ -189,6 +254,7 @@ Read-Only:
 
 - `billing_thresholds_usage_gte` (Number)
 - `created` (Number)
+- `discounts` (List of String)
 - `id` (String)
 - `metadata` (Map of String)
 - `object` (String)
@@ -210,6 +276,7 @@ Read-Only:
 - `price_recurring_aggregate_usage` (String)
 - `price_recurring_interval` (String)
 - `price_recurring_interval_count` (Number)
+- `price_recurring_meter` (String)
 - `price_recurring_usage_type` (String)
 - `price_tax_behavior` (String)
 - `price_tiers` (List of Object) (see [below for nested schema](#nestedobjatt--pending_update_subscription_items--price_tiers))
@@ -272,9 +339,11 @@ Read-Only:
 - `created` (Number)
 - `description` (String)
 - `display_name` (String)
+- `effective_percentage` (Number)
 - `id` (String)
 - `inclusive` (Boolean)
 - `jurisdiction` (String)
+- `jurisdiction_level` (String)
 - `livemode` (Boolean)
 - `metadata` (Map of String)
 - `object` (String)

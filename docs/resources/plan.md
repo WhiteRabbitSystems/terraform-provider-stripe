@@ -26,7 +26,8 @@ description: |-
 - `amount` (Number) A positive integer in cents (or local equivalent) (or 0 for a free plan) representing how much to charge on a recurring basis.
 - `amount_decimal` (String) Same as `amount`, but accepts a decimal value with at most 12 decimal places. Only one of `amount` and `amount_decimal` can be set.
 - `billing_scheme` (String) Describes how to compute the price per period. Either `per_unit` or `tiered`. `per_unit` indicates that the fixed amount (specified in `amount`) will be charged per unit in `quantity` (for plans with `usage_type=licensed`), or per unit of total usage (for plans with `usage_type=metered`). `tiered` indicates that the unit pricing will be computed using a tiering strategy as defined using the `tiers` and `tiers_mode` attributes.
-- `interval_count` (Number) The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+- `interval_count` (Number) The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+- `meter` (String) The meter tracking the usage of a metered price
 - `nickname` (String) A brief description of the plan, hidden from customers.
 - `product` (String) The product whose pricing this plan determines.
 - `tiers` (Block List) Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`. (see [below for nested schema](#nestedblock--tiers))

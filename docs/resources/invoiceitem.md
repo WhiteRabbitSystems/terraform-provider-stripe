@@ -25,19 +25,19 @@ description: |-
 - `currency` (String) Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
 - `description` (String) An arbitrary string which you can attach to the invoice item. The description is displayed in the invoice for easy tracking.
 - `discountable` (Boolean) Controls whether discounts apply to this invoice item. Defaults to false for prorations or negative invoice items, and true for all other invoice items.
-- `discounts` (Block List) The coupons to redeem into discounts for the invoice item or invoice line item. (see [below for nested schema](#nestedblock--discounts))
+- `discounts` (Block List) The coupons and promotion codes to redeem into discounts for the invoice item or invoice line item. (see [below for nested schema](#nestedblock--discounts))
 - `invoice` (String) The ID of an existing invoice to add this invoice item to. When left blank, the invoice item will be added to the next upcoming scheduled invoice. This is useful when adding invoice items in response to an invoice.created webhook. You can only add invoice items to draft invoices and there is a maximum of 250 items per invoice.
-- `period_end` (Number) The end of the period, which must be greater than or equal to the start.
-- `period_start` (Number) The start of the period.
-- `price` (String) The ID of the price object.
+- `period_end` (Number) The end of the period, which must be greater than or equal to the start. This value is inclusive.
+- `period_start` (Number) The start of the period. This value is inclusive.
+- `price` (String) The ID of the price object. One of `price` or `price_data` is required.
 - `price_data_currency` (String)
 - `price_data_product` (String)
 - `price_data_tax_behavior` (String)
 - `price_data_unit_amount` (Number)
 - `price_data_unit_amount_decimal` (String)
 - `quantity` (Number) Non-negative integer. The quantity of units for the invoice item.
-- `subscription` (String) The ID of a subscription to add this invoice item to. When left blank, the invoice item will be be added to the next upcoming scheduled invoice. When set, scheduled invoices for subscriptions other than the specified subscription will ignore the invoice item. Use this when you want to express that an invoice item has been accrued within the context of a particular subscription.
-- `tax_behavior` (String) Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+- `subscription` (String) The ID of a subscription to add this invoice item to. When left blank, the invoice item is added to the next upcoming scheduled invoice. When set, scheduled invoices for subscriptions other than the specified subscription will ignore the invoice item. Use this when you want to express that an invoice item has been accrued within the context of a particular subscription.
+- `tax_behavior` (String) Only required if a [default tax behavior](https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
 - `tax_code` (String) A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
 - `tax_rates` (List of String) The tax rates which apply to the invoice item. When set, the `default_tax_rates` on the invoice do not apply to this invoice item.
 - `unit_amount` (Number) The integer unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This `unit_amount` will be multiplied by the quantity to get the full amount. Passing in a negative `unit_amount` will reduce the `amount_due` on the invoice.
@@ -60,6 +60,7 @@ Optional:
 
 - `coupon` (String)
 - `discount` (String)
+- `promotion_code` (String) The promotion code applied to create this discount.
 
 Read-Only:
 
@@ -70,8 +71,8 @@ Read-Only:
 - `invoice` (String) The invoice that the discount's coupon was applied to, if it was applied directly to a particular invoice.
 - `invoice_item` (String) The invoice item `id` (or invoice line item `id` for invoice line items of type='subscription') that the discount's coupon was applied to, if it was applied directly to a particular invoice item or invoice line item.
 - `object` (String) String representing the object's type. Objects of the same type share the same value.
-- `promotion_code` (String) The promotion code applied to create this discount.
 - `start` (Number) Date that the coupon was applied.
 - `subscription` (String) The subscription that this coupon is applied to, if it is applied to a particular subscription.
+- `subscription_item` (String) The subscription item that this coupon is applied to, if it is applied to a particular subscription item.
 
 
